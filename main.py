@@ -1,5 +1,6 @@
 """
 Organize desktop by creating files for specific file formats
+-Grouping files-
 """
 
 import os, platform
@@ -26,13 +27,22 @@ def create_directories(file_extensions: list[str]) -> None:
     
     for file_extension in file_extensions:
         path = os.path.join(desktop_path, file_extension.upper())
-        
         # check whether the path is exist or not
         if not os.path.exists(path):
             os.mkdir(path)
 
+def move_files(files: list[str]):
+    for file in files:
+        file_path = os.path.join(desktop_path, file)
+        directory_name = file.split('.')[1].upper()
+        to_path = os.path.join(os.path.join(desktop_path, directory_name), file)
+        
+        os.rename(file_path, to_path)
+    
+
 desktop_path = get_desktop_path()        
-onlyfiles = [f for f in os.listdir(desktop_path) if os.path.isfile(os.path.join(desktop_path, f))]
-file_extensions = get_file_extensions(onlyfiles)
+files = [f for f in os.listdir(desktop_path) if os.path.isfile(os.path.join(desktop_path, f))]
+file_extensions = get_file_extensions(files)
 
 create_directories(file_extensions)
+move_files(files)
